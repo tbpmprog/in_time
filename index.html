@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Расчет времени для покрытия затрат</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Блок исходных данных -->
+    <div class="block">
+        <h3>Исходные данные</h3>
+        <label>
+            Заработная плата (₽):
+            <input type="number" id="salary" min="0">
+        </label>
+        <label>
+            Налог (%):
+            <input type="number" id="tax" min="0" max="100">
+        </label>
+        <p class="calculated-field">Зарплата после вычета налога: <span id="net-salary">0 ₽</span></p>
+        <label>
+            Рабочих дней в неделю:
+            <input type="number" id="work-days" min="1" max="7">
+        </label>
+        <label>
+            Рабочих часов в день:
+            <input type="number" id="work-hours" min="1" max="24">
+        </label>
+        <p class="calculated-field">Оплата труда в час: <span id="hourly-rate">0 ₽</span></p>
+        <button id="clear-button" class="clear-button">Очистить данные</button>
+    </div>
+
+    <!-- Блок расчета времени для покрытия затрат -->
+    <div class="block">
+        <h3>Расчет времени для покрытия затрат</h3>
+        <label>
+            Сумма потраченных средств (₽):
+            <input type="number" id="expense-amount" min="0">
+        </label>
+        <label>
+            Комментарий к затратам:
+            <input type="text" id="expense-description">
+        </label>
+        <button id="calculate-button" class="calculate-button">Рассчитать</button>
+    </div>
+
+    <!-- Блок для истории расходов -->
+    <div class="block">
+        <h3>История расходов</h3>
+        <div id="expense-history">
+            <!-- Здесь будут отображаться записи истории расходов в виде карточек -->
+        </div>
+        <!-- Кнопка для очистки истории расходов -->
+        <button id="clear-history-button" class="clear-button">Очистить историю расходов</button>
+    </div>
+
+    <!-- Переключатель темы -->
+    <div class="theme-switcher">
+        <label class="switch">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider">
+                <!-- Иконки солнца и луны -->
+                <span class="icon sun">☀️</span>
+                <span class="icon moon">🌙</span>
+            </span>
+        </label>
+    </div>
+
+    <!-- Модальное окно подтверждения -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content">
+            <p id="confirm-message">Вы действительно хотите выполнить это действие?</p>
+            <div class="modal-buttons">
+                <button id="confirm-yes" class="modal-button confirm">Да</button>
+                <button id="confirm-no" class="modal-button cancel">Нет</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Контейнер для уведомлений -->
+    <div id="notification-container"></div>
+
+    <!-- Подключение JavaScript файла -->
+    <script src="script.js"></script>
+</body>
+</html>
