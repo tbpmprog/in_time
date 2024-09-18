@@ -555,6 +555,11 @@ document.addEventListener('DOMContentLoaded', () => {
     expenseDescriptionInput = document.getElementById('expense-description');
     calculateButton = document.getElementById('calculate-button');
 
+    // Элементы модального окна инструкции
+    const helpButton = document.getElementById('help-button');
+    const instructionModal = document.getElementById('instruction-modal');
+    const instructionClose = document.getElementById('instruction-close');
+
     // Добавляем обработчики событий
     salaryInput.addEventListener('input', handleInputChange);
     taxInput.addEventListener('input', handleInputChange);
@@ -631,6 +636,23 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('click', (event) => {
         if (event.target === confirmModal) {
             hideModal();
+        }
+    });
+
+    // Показ модального окна при нажатии на кнопку с вопросиком
+    helpButton.addEventListener('click', () => {
+        instructionModal.classList.add('show');
+    });
+
+    // Скрытие модального окна при нажатии на кнопку "Закрыть"
+    instructionClose.addEventListener('click', () => {
+        instructionModal.classList.remove('show');
+    });
+
+    // Закрытие модального окна при клике вне его
+    window.addEventListener('click', (event) => {
+        if (event.target === instructionModal) {
+            instructionModal.classList.remove('show');
         }
     });
 

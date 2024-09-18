@@ -94,60 +94,107 @@ button:focus {
     background-color: #218838;
 }
 
-/* Стили для переключателя темы */
+/* Контейнер для кнопки с вопросиком и переключателя темы */
 .theme-switcher {
+    display: flex; /* Используем Flexbox для выравнивания элементов */
+    align-items: center; /* Центрируем по вертикали */
     position: fixed;
     top: 20px;
     right: 20px;
     z-index: 1000;
 }
 
-.theme-switcher .switch {
+/* Кнопка с вопросом */
+.help-button {
+    background-color: #fff; /* Белый фон */
+    border: 1px solid #ccc; /* Светло-серая обводка, как у карточек */
+    border-radius: 33px; /* Мягкое округление углов */
+    width: 33px; /* Размер кнопки */
+    height: 33px;
+    cursor: pointer;
+    font-size: 22px; /* Размер символа вопроса */
+    color: #007bff; /* Синий цвет вопроса */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    margin-right: 10px; /* Отступ справа от переключателя тем */
+    margin-bottom: 15px;
+}
+
+.help-button:hover {
+    background-color: #f0f2f5; /* Легкий фон при наведении */
+    border-color: #007bff; /* Синяя обводка при наведении */
+    color: #0056b3; /* Более тёмный синий цвет вопроса */
+}
+
+/* Тёмная тема для кнопки с вопросом */
+body.dark-mode .help-button {
+    background-color: #444; /* Темный фон для кнопки */
+    color: #fff; /* Белый цвет вопроса */
+    border-color: #666; /* Темно-серая обводка */
+}
+
+body.dark-mode .help-button:hover {
+    background-color: #555;
+    border-color: #fff; /* Белая обводка при наведении */
+    color: #ccc; /* Светло-серый цвет вопроса */
+}
+
+
+/* Стили для переключателя темы */
+.switch {
     position: relative;
     display: inline-block;
     width: 60px;
     height: 34px;
 }
 
-.theme-switcher .switch input { 
+.switch input { 
     opacity: 0;
     width: 0;
     height: 0;
 }
 
-.theme-switcher .slider {
+.slider {
     position: absolute;
     cursor: pointer;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background-color: #ccc;
-    transition: .4s;
+    transition: 0.4s;
     border-radius: 34px;
 }
 
-.theme-switcher .slider:before {
+.slider:before {
     position: absolute;
     content: "";
-    height: 26px; width: 26px;
-    left: 4px; bottom: 4px;
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
     background-color: white;
-    transition: .4s;
+    transition: 0.4s;
     border-radius: 50%;
 }
 
-.theme-switcher .switch input:checked + .slider {
+input:checked + .slider {
     background-color: #2196F3;
 }
 
-.theme-switcher .switch input:checked + .slider:before {
+input:checked + .slider:before {
     transform: translateX(26px);
 }
 
-/* Иконки солнца и луны */
+/* Иконки для переключателя темы */
 .theme-switcher .icon {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     font-size: 18px;
+    color: #fff;
 }
 
 .theme-switcher .icon.sun {
@@ -156,6 +203,19 @@ button:focus {
 
 .theme-switcher .icon.moon {
     right: 5px;
+}
+
+/* Тёмная тема для переключателя */
+body.dark-mode .slider {
+    background-color: #444;
+}
+
+body.dark-mode input:checked + .slider {
+    background-color: #2196F3;
+}
+
+body.dark-mode .slider:before {
+    background-color: white;
 }
 
 /* Стили для карточек истории расходов */
@@ -277,6 +337,87 @@ body.dark-mode .time-formatted {
 .notification .close-btn:focus {
     outline: none;
 }
+
+/* Модальное окно инструкции */
+#instruction-modal {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    position: fixed;
+    z-index: 10001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#instruction-modal.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#instruction-modal .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%; /* Уменьшаем ширину для лучшей адаптивности */
+    max-width: 600px; /* Максимальная ширина для крупных экранов */
+    max-height: 80vh; /* Ограничение по высоте на 80% высоты экрана */
+    border-radius: 8px;
+    text-align: left;
+    overflow-y: auto; /* Добавляем прокрутку, если содержимое больше окна */
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+}
+
+#instruction-modal.show .modal-content {
+    transform: scale(1);
+}
+
+/* Стилизуем полосу прокрутки */
+#instruction-modal .modal-content::-webkit-scrollbar {
+    width: 8px; /* Толщина полосы прокрутки */
+}
+
+#instruction-modal .modal-content::-webkit-scrollbar-thumb {
+    background-color: #007bff; /* Цвет полосы прокрутки */
+    border-radius: 4px; /* Скругление для полосы прокрутки */
+}
+
+#instruction-modal .modal-content::-webkit-scrollbar-thumb:hover {
+    background-color: #0056b3; /* Цвет при наведении */
+}
+
+/* Тёмная тема для модального окна */
+body.dark-mode #instruction-modal .modal-content {
+    background-color: #444;
+    color: #fff;
+    border-color: #555;
+}
+
+body.dark-mode #instruction-modal .modal-content::-webkit-scrollbar-thumb {
+    background-color: #fff;
+}
+
+body.dark-mode #instruction-modal .modal-content::-webkit-scrollbar-thumb:hover {
+    background-color: #ccc;
+}
+
+/* Кнопка закрытия инструкции */
+#instruction-modal .modal-button.cancel {
+    background-color: #dc3545;
+    color: #fff;
+    margin-top: 20px;
+}
+
+#instruction-modal .modal-button.cancel:hover {
+    background-color: #c82333;
+}
+
 
 /* Стили для модального окна */
 .modal {
@@ -467,6 +608,16 @@ body.dark-mode input.error {
 /* Плейсхолдер в полях с ошибками */
 body.dark-mode input.error::placeholder {
     color: #ff9999; /* Светло-красный плейсхолдер для темной темы */
+}
+
+/* Всплывающие подсказки */
+input[title], button[title] {
+    position: relative;
+    cursor: help;
+}
+
+input[title]:hover, button[title]:hover {
+    border-color: #007bff; /* Изменение цвета рамки при наведении */
 }
 
 /* Адаптивность для мобильных устройств */
