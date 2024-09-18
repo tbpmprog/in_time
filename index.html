@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <title>Расчет времени для покрытия затрат</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Манифест -->
+    <link rel="manifest" href="./manifest.json">
+
+    <!-- Иконка для главного экрана -->
+    <link rel="icon" href="./icons/icon-192x192.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="./icons/icon-512x512.png">
+
+    <!-- Метатеги для мобильных устройств -->
+    <meta name="theme-color" content="#007bff">
 </head>
 <body>
     <!-- Раздел с инструкцией -->
@@ -155,5 +164,16 @@
 
     <!-- Подключение JavaScript файла -->
     <script src="script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then((registration) => {
+                    console.log('Service Worker зарегистрирован: ', registration);
+                }).catch((registrationError) => {
+                    console.log('Service Worker регистрация не удалась: ', registrationError);
+                });
+            });
+        }
+    </script>
 </body>
 </html>
