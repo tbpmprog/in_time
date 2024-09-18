@@ -441,14 +441,14 @@ function updateExpenseHistory() {
         card.appendChild(amountP);
 
         // Время для покрытия (без графика)
-        // const timeWithoutScheduleP = document.createElement('p');
-        // timeWithoutScheduleP.textContent = `Без учета рабочего графика: ${entry.timeWithoutSchedule}`;
-        // card.appendChild(timeWithoutScheduleP);
+        const timeWithoutScheduleP = document.createElement('p');
+        timeWithoutScheduleP.textContent = `Без учета рабочего графика: ${entry.timeWithoutSchedule}`;
+        card.appendChild(timeWithoutScheduleP);
 
         // Время для покрытия (с графиком)
-        // const timeWithScheduleP = document.createElement('p');
-        // timeWithScheduleP.textContent = `С учетом рабочего графика: ${entry.timeWithSchedule}`;
-        // card.appendChild(timeWithScheduleP);
+        const timeWithScheduleP = document.createElement('p');
+        timeWithScheduleP.textContent = `С учетом рабочего графика: ${entry.timeWithSchedule}`;
+        card.appendChild(timeWithScheduleP);
 
         // Комментарий
         if (entry.comment && entry.comment !== '-') {
