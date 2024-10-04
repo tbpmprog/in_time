@@ -5,6 +5,8 @@ let expenseHistory = [];
 let confirmModal, confirmYesButton, confirmNoButton, confirmMessage;
 let confirmAction = null;
 let formData = {};
+let currentPage = 1; // Текущая страница
+const recordsPerPage = 5; // Количество записей на страницу
 
 /**
  * Функция для отображения уведомлений
@@ -413,79 +415,97 @@ function padWithZeroes(value, length) {
 }
 
 /**
- * Функция для обновления отображения истории расходов
+ * Функция для обновления текущей страницы истории
  */
 function updateExpenseHistory() {
     const expenseHistoryContainer = document.getElementById('expense-history');
     expenseHistoryContainer.innerHTML = '';
 
-    expenseHistory.forEach((entry, index) => {
+    // Рассчитываем начало и конец записей для текущей страницы
+    const start = (currentPage - 1) * recordsPerPage;
+    const end = start + recordsPerPage;
+    const paginatedExpenses = expenseHistory.slice(start, end);
+
+    paginatedExpenses.forEach((entry, index) => {
         const card = document.createElement('div');
         card.classList.add('expense-card');
 
-        // Кнопка удаления
         const deleteButton = document.createElement('button');
         deleteButton.classList.add('delete-button');
         deleteButton.textContent = 'Удалить';
-        deleteButton.addEventListener('click', () => deleteExpenseEntry(index));
+        deleteButton.addEventListener('click', () => deleteExpenseEntry(index + start));
         card.appendChild(deleteButton);
 
-        // Заголовок карточки с датой и временем
         const header = document.createElement('h4');
         header.textContent = `Дата и время: ${entry.date}`;
         card.appendChild(header);
 
-        // Сумма затрат
         const amountP = document.createElement('p');
         amountP.textContent = `Сумма затрат: ${formatCurrency(entry.expenseAmount)}`;
         card.appendChild(amountP);
 
-        // Время для покрытия (без графика)
         const timeWithoutScheduleP = document.createElement('p');
         timeWithoutScheduleP.textContent = `Без учета рабочего графика: ${entry.timeWithoutSchedule}`;
         card.appendChild(timeWithoutScheduleP);
 
-        // Время для покрытия (с графиком)
         const timeWithScheduleP = document.createElement('p');
         timeWithScheduleP.textContent = `С учетом рабочего графика: ${entry.timeWithSchedule}`;
         card.appendChild(timeWithScheduleP);
 
-        // Комментарий
         if (entry.comment && entry.comment !== '-') {
             const commentP = document.createElement('p');
             commentP.textContent = `Комментарий: ${entry.comment}`;
             card.appendChild(commentP);
         }
-        
-        // Проверка, есть ли числовые значения времени в записи
-        if (entry.years !== undefined && entry.months !== undefined && entry.weeks !== undefined &&
-            entry.days !== undefined && entry.hours !== undefined && entry.minutes !== undefined && entry.seconds !== undefined) {
-            
-            // Форматированное время в виде "0000.00.00.00.00.00.00"
-            const formattedTime = `${padWithZeroes(entry.years, 4)}.${padWithZeroes(entry.months, 2)}.${padWithZeroes(entry.weeks, 2)}.${padWithZeroes(entry.days, 2)}.${padWithZeroes(entry.hours, 2)}.${padWithZeroes(entry.minutes, 2)}.${padWithZeroes(entry.seconds, 2)}`;
 
-            const timeFormattedP = document.createElement('p');
-            timeFormattedP.classList.add('time-formatted');
-            timeFormattedP.textContent = formattedTime; // Выводим только форматированное время
-            card.appendChild(timeFormattedP);
-        }
-        // else {
-        //     // Если данные о времени отсутствуют (старые записи), выводим сообщение
-        //     const timeFormattedP = document.createElement('p');
-        //     timeFormattedP.classList.add('time-formatted');
-        //     timeFormattedP.textContent = 'Время не указано'; // Можно изменить этот текст на любой другой
-        //     card.appendChild(timeFormattedP);
-        // }
+        const formattedTime = `${padWithZeroes(entry.years, 4)}.${padWithZeroes(entry.months, 2)}.${padWithZeroes(entry.weeks, 2)}.${padWithZeroes(entry.days, 2)}.${padWithZeroes(entry.hours, 2)}.${padWithZeroes(entry.minutes, 2)}.${padWithZeroes(entry.seconds, 2)}`;
+
+        const timeFormattedP = document.createElement('p');
+        timeFormattedP.classList.add('time-formatted');
+        timeFormattedP.textContent = formattedTime;
+        card.appendChild(timeFormattedP);
 
         expenseHistoryContainer.appendChild(card);
     });
+
+    // Обновляем пагинацию
+    updatePaginationControls();
+}
+
+/**
+ * Функция для обновления кнопок пагинации
+ */
+function updatePaginationControls() {
+    const paginationControls = document.getElementById('pagination-controls');
+    paginationControls.innerHTML = '';
+
+    const totalPages = Math.ceil(expenseHistory.length / recordsPerPage);
+
+    // Создаем кнопки для каждой страницы
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i;
+        pageButton.classList.add('pagination-button');
+
+        // Добавляем класс для текущей активной страницы
+        if (i === currentPage) {
+            pageButton.classList.add('active');
+        }
+
+        // Обработчик события для перехода на выбранную страницу
+        pageButton.addEventListener('click', () => {
+            currentPage = i;
+            updateExpenseHistory();
+        });
+
+        paginationControls.appendChild(pageButton);
+    }
 }
 
 /**
  * Функция для удаления отдельной записи из истории
  */
 function deleteExpenseEntry(index) {
-    // Устанавливаем сообщение и действие для модального окна
     confirmMessage.textContent = 'Вы действительно хотите удалить эту запись?';
     confirmAction = 'deleteExpenseEntry';
     confirmModal.dataset.entryIndex = index;
@@ -496,7 +516,6 @@ function deleteExpenseEntry(index) {
  * Функция для очистки данных формы
  */
 function clearFormData() {
-    // Устанавливаем сообщение и действие для модального окна
     confirmMessage.textContent = 'Вы действительно хотите очистить данные?';
     confirmAction = 'clearFormData';
     showModal();
@@ -506,7 +525,6 @@ function clearFormData() {
  * Функция для очистки истории расходов
  */
 function clearExpenseHistory() {
-    // Устанавливаем сообщение и действие для модального окна
     confirmMessage.textContent = 'Вы действительно хотите очистить историю расходов?';
     confirmAction = 'clearExpenseHistory';
     showModal();
@@ -578,22 +596,17 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('input', removeErrorHighlight);
     });
 
-    // Обработчик для кнопки "Очистить историю расходов"
     const clearHistoryButton = document.getElementById('clear-history-button');
     clearHistoryButton.addEventListener('click', clearExpenseHistory);
 
-    // Элементы модального окна подтверждения
     confirmModal = document.getElementById('confirm-modal');
     confirmYesButton = document.getElementById('confirm-yes');
     confirmNoButton = document.getElementById('confirm-no');
     confirmMessage = document.getElementById('confirm-message');
 
-    // Обработчики для кнопок модального окна
     confirmYesButton.addEventListener('click', () => {
-        // Определяем, какое действие подтверждено
         switch (confirmAction) {
             case 'clearFormData':
-                // Очищаем данные формы
                 salaryInput.value = '';
                 taxInput.value = '';
                 netSalaryDisplay.textContent = formatCurrency(0);
@@ -605,14 +618,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 showNotification('Данные успешно очищены.', 'success');
                 break;
             case 'clearExpenseHistory':
-                // Очищаем историю расходов
                 expenseHistory = [];
                 saveExpenseHistory();
                 updateExpenseHistory();
                 showNotification('История расходов очищена.', 'success');
                 break;
             case 'deleteExpenseEntry':
-                // Удаляем запись из истории
                 const index = parseInt(confirmModal.dataset.entryIndex, 10);
                 expenseHistory.splice(index, 1);
                 saveExpenseHistory();
@@ -620,46 +631,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 showNotification('Запись удалена.', 'success');
                 break;
             default:
-                // Ничего не делаем
                 break;
         }
-        // Скрываем модальное окно
         hideModal();
     });
 
     confirmNoButton.addEventListener('click', () => {
-        // Закрываем модальное окно без действий
         hideModal();
     });
 
-    // Закрытие модального окна при клике вне его
     window.addEventListener('click', (event) => {
         if (event.target === confirmModal) {
             hideModal();
         }
     });
 
-    // Показ модального окна при нажатии на кнопку с вопросиком
     helpButton.addEventListener('click', () => {
         instructionModal.classList.add('show');
     });
 
-    // Скрытие модального окна при нажатии на кнопку "Закрыть"
     instructionClose.addEventListener('click', () => {
         instructionModal.classList.remove('show');
     });
 
-    // Закрытие модального окна при клике вне его
     window.addEventListener('click', (event) => {
         if (event.target === instructionModal) {
             instructionModal.classList.remove('show');
         }
     });
 
-    // Загрузка темы и данных формы
     loadTheme();
     loadFormData();
-
-    // Загрузка истории расходов
     loadExpenseHistory();
 });
