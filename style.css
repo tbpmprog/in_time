@@ -254,50 +254,6 @@ body.dark-mode .slider:before {
     text-decoration: underline;
 }
 
-/* Контейнер для кнопок пагинации и очистки истории на одной линии */
-.history-controls {
-    display: flex;
-    justify-content: space-between; /* Разделение элементов: кнопки пагинации слева, кнопка очистки справа */
-    align-items: center;
-    margin-top: 20px;
-}
-
-/* Стили для кнопок пагинации */
-.pagination-controls {
-    display: flex;
-    gap: 8px; /* Расстояние между кнопками пагинации */
-}
-
-.pagination-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    margin: 0 4px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.pagination-button:hover {
-    background-color: #0056b3;
-}
-
-.pagination-button.active {
-    background-color: #0056b3;
-    cursor: default;
-    font-weight: bold;
-}
-
-/* Стили для кнопки очистки истории расходов */
-.clear-button {
-    background-color: #dc3545;
-}
-
-.clear-button:hover {
-    background-color: #c82333;
-}
-
 /* Стили для строки времени в формате "0000.00.00.00.00.00.00" */
 
 /* Для светлой темы — используем более насыщенный зеленый */
@@ -313,7 +269,6 @@ body.dark-mode .slider:before {
 body.dark-mode .time-formatted {
     color: #45ff45; /* Ярко-зеленый для темной темы */
     font-weight: bold;
-    /* color: #00FF00;  Ярко-зеленый для темной темы */
 }
 
 /* Стили для уведомлений */
@@ -461,7 +416,6 @@ body.dark-mode #instruction-modal .modal-content::-webkit-scrollbar-thumb:hover 
 #instruction-modal .modal-button.cancel:hover {
     background-color: #c82333;
 }
-
 
 /* Стили для модального окна */
 .modal {
@@ -612,7 +566,7 @@ body.dark-mode .theme-switcher .switch input:checked + .slider {
     background-color: #555;
 }
 
-body.dark-mode .theme-switcher .slider:before {
+body.dark-mode .slider:before {
     background-color: #ccc;
 }
 
@@ -693,4 +647,34 @@ input[title]:hover, button[title]:hover {
     .expense-card h4 {
         font-size: 16px;
     }
+}
+
+.history-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+/* Стили для пагинации */
+.pagination-controls {
+    display: inline-block;
+}
+
+.pagination-controls button {
+    margin-right: 5px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.pagination-controls button:hover {
+    background-color: #0056b3;
+}
+
+.pagination-controls .active-page {
+    background-color: #0056b3;
 }
